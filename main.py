@@ -1,44 +1,39 @@
 import os
 
-import factions
-from word_worker import WordWorker, WordWorkerMode
+from factions import load_factions
+from word_worker import WordWorker
+from work_mode_factory import WorkModeFactory
 
 
 def main():
     print("Выберите режим работы:")
-    print("1. Постановление")
-    print("2. Предписание")
-    mode_choice = input("Введите номер режима (1 или 2): ")
+    for mode_id, mode in WorkModeFactory.modes.items():
+        print(f"{mode_id}. {mode.name}")
+    mode_choice = input("Введите номер режима: ")
 
-    if mode_choice == "1":
-        mode = WordWorkerMode.Postanovlenie
-    elif mode_choice == "2":
-        mode = WordWorkerMode.Predpisanie
-    else:
+    try:
+        mode = WorkModeFactory.get_mode(int(mode_choice))
+    except ValueError:
         print("Неверный выбор режима. Завершение программы.")
         return
 
+    factions = load_factions()
     print("\nДоступные фракции:")
-    for faction_name in factions.__dict__.keys():
-        if not faction_name.startswith("__"):
-            print(f"- {faction_name}")
+    for faction_name in factions:
+        print(f"- {faction_name}")
 
     faction_choice = input("Введите название фракции: ")
-    faction = getattr(factions, faction_choice, None)
+    faction = factions.get(faction_choice)
 
     if faction is None:
         print("Неверный выбор фракции. Завершение программы.")
         return
 
-    case_number = input(
-        "Введите номер постановления: "
-        if mode == WordWorkerMode.Postanovlenie
-        else "Введите номер предписания: "
-    )
+    case_number = input(f"Введите номер {mode.name.lower()}: ")
 
     output_path = os.path.join(
         os.path.dirname(__file__),
-        f"{mode.value['name']}_{faction_choice}_{case_number}.docx",
+        f"{mode.name}_{faction_choice}_{case_number}.docx",
     )
 
     worker = WordWorker(mode=mode, faction=faction, case_number=case_number)

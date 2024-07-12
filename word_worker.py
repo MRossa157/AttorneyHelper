@@ -1,21 +1,17 @@
 from dataclasses import dataclass
 from datetime import datetime
-from enum import Enum
+from typing import Dict
 
 from docxtpl import DocxTemplate
 
-import constants
-
-
-class WordWorkerMode(Enum):
-    Postanovlenie = {"id": 1, "name": "Постановление"}
-    Predpisanie = {"id": 2, "name": "Предписание"}
+from config import config
+from work_mode_factory import WorkMode
 
 
 @dataclass
 class WordWorker:
-    mode: WordWorkerMode
-    faction: dict[str, str]
+    mode: WorkMode
+    faction: Dict[str, str]
     case_number: str
 
     def fill_template(self, output_path):
@@ -24,19 +20,13 @@ class WordWorker:
             "small_faction_name": self.faction["name"].lower(),
             "leaders_name": self.faction["leader_name_surname"],
             "lead_dis": self.faction["leader_discord"],
-            "my_fio": constants.MY_FIO,
-            "my_dis": constants.MY_DISCORD,
-            "my_rank": constants.MY_RANK,
+            "my_fio": config["personalInfo"]["fio"],
+            "my_dis": config["personalInfo"]["discord"],
+            "my_rank": config["personalInfo"]["rank"],
             "date": datetime.now().strftime("%d.%m.%Y"),
             "number": self.case_number,
         }
 
-        doc = DocxTemplate(self.__get_template_path())
+        doc = DocxTemplate(self.mode.get_template_path())
         doc.render(replacements)
         doc.save(output_path)
-
-    def __get_template_path(self):
-        if self.mode == WordWorkerMode.Predpisanie:
-            return constants.PREDPISANIE_TEMPLATE_PATH
-        elif self.mode == WordWorkerMode.Postanovlenie:
-            return constants.POSTANOVLENIE_TEMPLATE_PATH

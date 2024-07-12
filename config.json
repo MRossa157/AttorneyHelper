@@ -1,0 +1,13 @@
+{
+    "templates": {
+      "postanovlenie": "templates/postanovlenie_template.docx",
+      "predpisanie": "templates/predpisanie_template.docx",
+      "access_zot": "templates/access_zot_template.docx"
+    },
+    "factionsPath": "factions.json",
+    "personalInfo": {
+      "fio": "Divine Fearlessez",
+      "discord": "mrossa",
+      "rank": "Военный прокурор"
+    }
+  }

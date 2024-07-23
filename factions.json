@@ -23,5 +23,10 @@
         "name": "FIB",
         "leader_name_surname": "Charlie Reed",
         "leader_discord": "firrseen"
-    }
+    },
+	"USSS": {
+		"name": "USSS",
+		"leader_name_surname": "Neo Ward",
+		"leader_discord": "dart_43"
+	}
 }

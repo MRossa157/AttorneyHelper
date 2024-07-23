@@ -33,7 +33,7 @@ def main():
 
     output_path = os.path.join(
         os.path.dirname(__file__),
-        f"{mode.name}_{faction_choice}_{case_number}.docx",
+        f"{case_number}_{mode.name}_{faction_choice}.docx",
     )
 
     worker = WordWorker(mode=mode, faction=faction, case_number=case_number)
